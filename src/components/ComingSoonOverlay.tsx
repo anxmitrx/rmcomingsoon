@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { Mail, Phone } from "lucide-react";
 import logo from "@/assets/logo.png";
 
 const COUNTDOWN_STORAGE_KEY = "one_of_none_launch_target";
@@ -157,6 +158,29 @@ export function ComingSoonOverlay() {
                 </span>
               </div>
             ))}
+          </motion.div>
+
+          {/* Contact Information */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="mt-6 sm:mt-7 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 text-xs sm:text-sm text-neutral-800"
+          >
+            <a
+              href="mailto:info@oneofnonecollective.com"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/75 hover:bg-white border border-white/90 backdrop-blur-md shadow-[0_4px_16px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:text-neutral-950 font-medium"
+            >
+              <Mail className="w-3.5 h-3.5 text-neutral-500" />
+              <span>info@oneofnonecollective.com</span>
+            </a>
+            <a
+              href="tel:9007406100"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/75 hover:bg-white border border-white/90 backdrop-blur-md shadow-[0_4px_16px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:text-neutral-950 font-medium"
+            >
+              <Phone className="w-3.5 h-3.5 text-neutral-500" />
+              <span>9007406100</span>
+            </a>
           </motion.div>
 
         </main>
