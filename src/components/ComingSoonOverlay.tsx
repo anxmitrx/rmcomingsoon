@@ -160,27 +160,40 @@ export function ComingSoonOverlay() {
             ))}
           </motion.div>
 
-          {/* Contact Information */}
+          {/* Professional Contact Us Bar */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="mt-6 sm:mt-7 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 text-xs sm:text-sm text-neutral-800"
+            className="mt-6 sm:mt-8 w-full max-w-lg"
           >
-            <a
-              href="mailto:info@oneofnonecollective.com"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/75 hover:bg-white border border-white/90 backdrop-blur-md shadow-[0_4px_16px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:text-neutral-950 font-medium"
-            >
-              <Mail className="w-3.5 h-3.5 text-neutral-500" />
-              <span>info@oneofnonecollective.com</span>
-            </a>
-            <a
-              href="tel:9007406100"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/75 hover:bg-white border border-white/90 backdrop-blur-md shadow-[0_4px_16px_rgba(0,0,0,0.05)] transition-all duration-300 hover:scale-105 hover:text-neutral-950 font-medium"
-            >
-              <Phone className="w-3.5 h-3.5 text-neutral-500" />
-              <span>9007406100</span>
-            </a>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-4 px-5 py-2.5 rounded-2xl sm:rounded-full bg-white/80 border border-white/95 shadow-[0_8px_30px_rgba(0,0,0,0.06)] backdrop-blur-xl">
+              <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.2em] text-neutral-400 uppercase shrink-0">
+                Contact Us
+              </span>
+
+              <div className="hidden sm:block h-3.5 w-px bg-neutral-300/80" />
+
+              <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs sm:text-sm">
+                <a
+                  href="mailto:info@oneofnonecollective.com"
+                  className="inline-flex items-center gap-1.5 font-medium text-neutral-800 hover:text-neutral-950 transition-colors group"
+                >
+                  <Mail className="w-3.5 h-3.5 text-neutral-500 group-hover:text-neutral-900 transition-colors" />
+                  <span>info@oneofnonecollective.com</span>
+                </a>
+
+                <span className="text-neutral-300">·</span>
+
+                <a
+                  href="tel:9007406100"
+                  className="inline-flex items-center gap-1.5 font-medium text-neutral-800 hover:text-neutral-950 transition-colors group"
+                >
+                  <Phone className="w-3.5 h-3.5 text-neutral-500 group-hover:text-neutral-900 transition-colors" />
+                  <span>9007406100</span>
+                </a>
+              </div>
+            </div>
           </motion.div>
 
         </main>
