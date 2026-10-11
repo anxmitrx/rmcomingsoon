@@ -186,10 +186,13 @@ export function ComingSoonOverlay() {
                 <span className="text-neutral-300">·</span>
 
                 <a
-                  href="tel:9007406100"
+                  href="https://wa.me/919007406100"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Chat on WhatsApp"
                   className="inline-flex items-center gap-1.5 font-medium text-neutral-800 hover:text-neutral-950 transition-colors group"
                 >
-                  <Phone className="w-3.5 h-3.5 text-neutral-500 group-hover:text-neutral-900 transition-colors" />
+                  <Phone className="w-3.5 h-3.5 text-neutral-500 group-hover:text-emerald-600 transition-colors" />
                   <span>9007406100</span>
                 </a>
               </div>
