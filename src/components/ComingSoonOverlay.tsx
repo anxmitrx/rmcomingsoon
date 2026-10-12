@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { Mail, Phone, Instagram } from "lucide-react";
 import logoWordmark from "@/assets/logo-wordmark.png";
-import palmBg from "@/assets/luxury-beige-palm-bg.jpg";
 
 export function ComingSoonOverlay() {
   return (
@@ -11,24 +10,24 @@ export function ComingSoonOverlay() {
       className="fixed inset-0 z-50 min-h-screen w-full flex items-center justify-center px-4 select-none overflow-hidden text-[#50131D]"
     >
       {/* =========================================================================
-          BACKGROUND LAYER: WARM BEIGE WITH DELICATE BOTANICAL PALM SHADOW
-          - High-end warm creamy beige alabaster plaster surface
-          - Gentle, out-of-focus botanical palm leaf shadow cast from lower left
+          BACKGROUND LAYER: PURE LUXURY WARM BEIGE (NO SHADOWS)
+          - Clean, smooth luxury warm cream / alabaster beige surface
+          - Completely free of shadows, purely serene and minimalist
          ========================================================================= */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
       >
-        {/* Palm Shadow Background Image */}
         <div
-          className="absolute inset-0 bg-[#F5EFE6] bg-cover bg-center sm:bg-bottom-left transition-opacity duration-1000"
+          className="absolute inset-0 bg-[#F7F3EA]"
           style={{
-            backgroundImage: `url(${palmBg})`,
+            backgroundColor: "#F7F3EA",
+            backgroundImage:
+              "radial-gradient(circle at 50% 35%, #FAF7F0 0%, #F5EFE4 55%, #ECE3D2 100%)",
           }}
         />
-
-        {/* Ambient subtle warm tint wash */}
-        <div className="absolute inset-0 bg-[#FAF6EE]/20 backdrop-blur-[0.5px]" />
+        {/* Soft, gentle ambient illumination */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[700px] bg-[radial-gradient(circle_at_center,rgba(255,253,248,0.7),transparent_70%)] blur-3xl pointer-events-none" />
       </div>
 
       {/* =========================================================================
