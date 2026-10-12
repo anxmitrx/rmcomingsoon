@@ -6,8 +6,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-serif: "Fraunces", Georgia, serif;
-  --font-sans: "Outfit", system-ui, sans-serif;
+  --font-serif: "Playfair Display", "Fraunces", Georgia, serif;
+  --font-sans: "Outfit", "Inter", system-ui, sans-serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);

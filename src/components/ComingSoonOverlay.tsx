@@ -1,208 +1,330 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Mail, Phone } from "lucide-react";
-import logo from "@/assets/logo.png";
+import { Mail, Phone, Instagram } from "lucide-react";
+import logoWordmark from "@/assets/logo-wordmark.png";
+import palmBg from "@/assets/luxury-beige-palm-bg.jpg";
 
-const COUNTDOWN_STORAGE_KEY = "one_of_none_launch_target";
-// 2 months = 60 days (+ 12 hours buffer so it displays 60 days)
-const TWO_MONTHS_MS = 60 * 24 * 60 * 60 * 1000 + 12 * 60 * 60 * 1000;
+/**
+ * Launch Target Date Configuration:
+ * Initialized for 60 Days, 11 Hours, 58 Minutes, 00 Seconds target.
+ * Persists in localStorage to maintain continuous live countdown across page visits.
+ */
+const STORAGE_KEY = "one_of_none_launch_timestamp";
+const DEFAULT_OFFSET_MS =
+  60 * 24 * 60 * 60 * 1000 + // 60 days
+  11 * 60 * 60 * 1000 +      // 11 hours
+  58 * 60 * 1000;            // 58 mins
 
-function getLaunchTarget(): number {
-  if (typeof window === "undefined") return Date.now() + TWO_MONTHS_MS;
-  const stored = localStorage.getItem(COUNTDOWN_STORAGE_KEY);
-  if (stored) {
-    const val = parseInt(stored, 10);
-    if (!isNaN(val) && val > Date.now()) return val;
-  }
-  const newTarget = Date.now() + TWO_MONTHS_MS;
+function getInitialLaunchTarget(): number {
+  if (typeof window === "undefined") return Date.now() + DEFAULT_OFFSET_MS;
   try {
-    localStorage.setItem(COUNTDOWN_STORAGE_KEY, newTarget.toString());
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const parsed = parseInt(stored, 10);
+      if (!isNaN(parsed) && parsed > Date.now()) {
+        return parsed;
+      }
+    }
   } catch {}
-  return newTarget;
+
+  const target = Date.now() + DEFAULT_OFFSET_MS;
+  try {
+    localStorage.setItem(STORAGE_KEY, target.toString());
+  } catch {}
+  return target;
 }
 
-function calculateRemaining(targetMs: number) {
-  const diff = Math.max(0, targetMs - Date.now());
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-  const minutes = Math.floor((diff / (1000 * 60)) % 60);
-  const seconds = Math.floor((diff / 1000) % 60);
+function getRemainingTime(targetMs: number) {
+  const difference = Math.max(0, targetMs - Date.now());
+  const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((difference / (1000 * 60)) % 60);
+  const seconds = Math.floor((difference / 1000) % 60);
   return { days, hours, minutes, seconds };
 }
 
 export function ComingSoonOverlay() {
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [targetTimestamp] = useState(() => getLaunchTarget());
-  const [timeLeft, setTimeLeft] = useState({
+  const [targetTime] = useState<number>(() => getInitialLaunchTarget());
+  const [timeLeft, setTimeLeft] = useState(() => ({
     days: 60,
-    hours: 12,
-    minutes: 0,
+    hours: 11,
+    minutes: 58,
     seconds: 0,
-  });
+  }));
 
-  // Track scroll progress across the 9000+ px underlying page
   useEffect(() => {
-    const handleScroll = () => {
-      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
-      if (totalScroll > 0) {
-        setScrollProgress((window.scrollY / totalScroll) * 100);
-      }
-    };
+    setTimeLeft(getRemainingTime(targetTime));
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    const interval = setInterval(() => {
+      setTimeLeft(getRemainingTime(targetTime));
+    }, 1000);
 
-  // Live countdown timer ticking down towards 2 months
-  useEffect(() => {
-    const updateCountdown = () => {
-      setTimeLeft(calculateRemaining(targetTimestamp));
-    };
+    return () => clearInterval(interval);
+  }, [targetTime]);
 
-    updateCountdown();
-    const timer = setInterval(updateCountdown, 1000);
-    return () => clearInterval(timer);
-  }, [targetTimestamp]);
-
+  const countdownUnits = [
+    { label: "DAYS", value: timeLeft.days },
+    { label: "HOURS", value: timeLeft.hours },
+    { label: "MINUTES", value: timeLeft.minutes },
+    { label: "SECONDS", value: timeLeft.seconds },
+  ];
 
   return (
-    <>
-      {/* 
-        Full-Screen Fixed Position Bright Glassmorphic Overlay:
-        - fixed inset-0 z-50 w-screen h-screen
-        - Bright luminous glassmorphic wash (bg-white/35 backdrop-blur-[15px])
-        - Backdrop blur allows underlying animations, videos, and scroll transforms to be visibly active
-        - Stays fixed over the entire website as user scrolls from top to bottom
-        - Allows native wheel/touch scroll to pass through while keeping background clicks disabled
-      */}
+    <div
+      id="coming-soon-landing"
+      aria-label="One of None — Coming Soon"
+      className="fixed inset-0 z-50 min-h-screen w-full flex flex-col justify-between items-center px-4 py-6 sm:py-8 md:py-10 select-none overflow-y-auto overflow-x-hidden text-[#50131D]"
+    >
+      {/* =========================================================================
+          BACKGROUND LAYER: WARM BEIGE WITH DELICATE BOTANICAL PALM SHADOW
+          - High-end warm creamy beige alabaster plaster surface
+          - Gentle, out-of-focus botanical palm leaf shadow cast from lower left
+          - Soft vignette with deep luxury burgundy typography
+         ========================================================================= */}
       <div
-        id="coming-soon-overlay"
-        aria-label="Coming Soon Overlay"
-        className="fixed inset-0 z-50 h-screen w-screen overflow-hidden flex items-center justify-center select-none pointer-events-none bg-white/35 backdrop-blur-[15px] backdrop-saturate-[170%] backdrop-brightness-[1.04]"
-        style={{
-          WebkitBackdropFilter: "blur(15px) saturate(170%) brightness(104%)",
-          backdropFilter: "blur(15px) saturate(170%) brightness(104%)",
-        }}
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
       >
-        {/* Subtle top scroll indicator showing user progress through the site */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-black/5 z-30">
-          <div
-            className="h-full bg-gradient-to-r from-emerald-500 via-amber-500 to-rose-500 transition-all duration-150"
-            style={{ width: `${scrollProgress}%` }}
-          />
-        </div>
+        {/* Palm Shadow Background Image */}
+        <div
+          className="absolute inset-0 bg-[#F5EFE6] bg-cover bg-center sm:bg-bottom-left transition-opacity duration-1000"
+          style={{
+            backgroundImage: `url(${palmBg})`,
+          }}
+        />
 
-        {/* Ambient subtle light wash */}
-        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[600px] bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.7),rgba(255,255,255,0.1),transparent_70%)] blur-2xl" />
-        </div>
+        {/* Ambient subtle warm tint wash to ensure typography has peak contrast */}
+        <div className="absolute inset-0 bg-[#FAF6EE]/25 backdrop-blur-[0.5px]" />
+      </div>
 
-
-        {/* PERFECTLY CENTERED HIGH-CONTRAST COMING SOON CARD */}
-        <main className="w-full max-w-2xl px-5 flex flex-col items-center justify-center text-center z-10 py-6 pointer-events-auto">
-          {/* ONE OF NONE Brand Logo */}
-          <motion.div
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="mb-5 sm:mb-6"
+      {/* =========================================================================
+          TOP: ANIMATED BRAND IDENTITY
+          - Standalone geometric shapes with ZERO CONNECTIONS (no connecting lines)
+          - Hypnotic luxury animation: shapes transition from BLANK to FILLED
+            with signature burgundy color (#50131D)
+          - High-resolution custom brand wordmark "ONE OF NONE PERFUME"
+         ========================================================================= */}
+      <motion.header
+        initial={{ opacity: 0, y: -12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full flex flex-col items-center justify-center pt-2 pointer-events-auto group cursor-default"
+      >
+        {/* The 3 Geometric Shapes (Circle, Squircle, Rounded Hexagon) without connections */}
+        <div className="flex items-center justify-center">
+          <svg
+            viewBox="0 0 357 114"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-20 sm:w-24 md:w-28 h-auto text-[#50131D]"
+            aria-label="One of None Geometric Mark"
           >
-            <img
-              src={logo}
-              alt="ONE OF NONE"
-              className="h-5 sm:h-6 md:h-7 w-auto object-contain mx-auto"
+            {/* Shape 1: Circle (Blank to Filled Animation) */}
+            <motion.circle
+              cx="57"
+              cy="57"
+              r="47"
+              stroke="#50131D"
+              strokeWidth="15"
+              initial={{ fill: "rgba(80, 19, 29, 0)" }}
+              animate={{
+                fill: [
+                  "rgba(80, 19, 29, 0)",
+                  "rgba(80, 19, 29, 1)",
+                  "rgba(80, 19, 29, 1)",
+                  "rgba(80, 19, 29, 0)",
+                ],
+              }}
+              transition={{
+                duration: 4.5,
+                repeat: Infinity,
+                times: [0, 0.22, 0.78, 1],
+                ease: [0.22, 1, 0.36, 1],
+                delay: 0.1,
+              }}
             />
-          </motion.div>
 
-          {/* High-Contrast Bold Editorial Typography */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-3 sm:space-y-4"
-          >
-            <h1 className="font-serif text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-light tracking-tight text-neutral-900 leading-[0.95] drop-shadow-[0_4px_16px_rgba(255,255,255,0.8)]">
-              Coming{" "}
-              <span className="font-normal italic bg-gradient-to-r from-amber-600 via-rose-600 to-emerald-600 bg-clip-text text-transparent">
-                Soon
-              </span>
-            </h1>
+            {/* Shape 2: Rounded Square / Squircle (Blank to Filled Animation) - NO CONNECTIONS */}
+            <motion.rect
+              x="133"
+              y="9.5"
+              width="95"
+              height="95"
+              rx="24"
+              ry="24"
+              stroke="#50131D"
+              strokeWidth="15"
+              initial={{ fill: "rgba(80, 19, 29, 0)" }}
+              animate={{
+                fill: [
+                  "rgba(80, 19, 29, 0)",
+                  "rgba(80, 19, 29, 1)",
+                  "rgba(80, 19, 29, 1)",
+                  "rgba(80, 19, 29, 0)",
+                ],
+              }}
+              transition={{
+                duration: 4.5,
+                repeat: Infinity,
+                times: [0, 0.22, 0.78, 1],
+                ease: [0.22, 1, 0.36, 1],
+                delay: 0.35,
+              }}
+            />
 
-            <p className="max-w-lg mx-auto text-sm sm:text-base md:text-lg font-medium text-neutral-700 tracking-wide leading-relaxed pt-1">
-              The essence of luxury is almost here. Prepare to discover your new signature scent.
-            </p>
-          </motion.div>
+            {/* Shape 3: Rounded Hexagon (Blank to Filled Animation) - NO CONNECTIONS */}
+            <motion.polygon
+              points="284,10 324,10 351,57 324,104 284,104 257,57"
+              stroke="#50131D"
+              strokeWidth="15"
+              strokeLinejoin="round"
+              initial={{ fill: "rgba(80, 19, 29, 0)" }}
+              animate={{
+                fill: [
+                  "rgba(80, 19, 29, 0)",
+                  "rgba(80, 19, 29, 1)",
+                  "rgba(80, 19, 29, 1)",
+                  "rgba(80, 19, 29, 0)",
+                ],
+              }}
+              transition={{
+                duration: 4.5,
+                repeat: Infinity,
+                times: [0, 0.22, 0.78, 1],
+                ease: [0.22, 1, 0.36, 1],
+                delay: 0.6,
+              }}
+            />
+          </svg>
+        </div>
 
-          {/* Live Countdown Counter */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="grid grid-cols-4 gap-2.5 sm:gap-3.5 mt-5 sm:mt-7 max-w-sm w-full"
-          >
-            {[
-              { label: "DAYS", val: timeLeft.days },
-              { label: "HOURS", val: timeLeft.hours },
-              { label: "MINS", val: timeLeft.minutes },
-              { label: "SECS", val: timeLeft.seconds },
-            ].map((unit, i) => (
+        {/* Official Wordmark with unique geometric letterforms */}
+        <img
+          src={logoWordmark}
+          alt="ONE OF NONE — PERFUME"
+          className="w-28 sm:w-32 md:w-36 h-auto object-contain mx-auto mt-2 sm:mt-2.5 transition-transform duration-500 group-hover:scale-[1.01]"
+          draggable={false}
+        />
+      </motion.header>
+
+      {/* =========================================================================
+          CENTER & LOWER CENTER: HERO TYPOGRAPHY & MINIMALIST COUNTDOWN
+          - All-caps editorial headline: "COMING SOON" in high-contrast serif
+          - Delicate Subtext: High readability, airy tracking
+          - Understated Countdown Timer: Slim numbers, subtle dividers
+         ========================================================================= */}
+      <main className="w-full max-w-2xl flex flex-col items-center justify-center text-center my-auto py-6 sm:py-8 pointer-events-auto">
+        {/* Hero Typography */}
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col items-center space-y-2 sm:space-y-3 px-2"
+        >
+          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-normal text-[#50131D] tracking-[0.14em] sm:tracking-[0.18em] uppercase leading-tight">
+            Coming Soon
+          </h1>
+
+          <p className="font-sans text-xs sm:text-sm md:text-[15px] text-[#50131D]/75 font-light tracking-wide max-w-md mx-auto leading-relaxed pt-0.5">
+            The essence of luxury is almost here. Prepare to discover your new
+            signature scent.
+          </p>
+        </motion.div>
+
+        {/* Minimalist Countdown Timer (Understated, Editorial Proportions) */}
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-8 sm:mt-10 md:mt-12 w-full max-w-lg px-2"
+        >
+          <div className="flex items-center justify-center w-full">
+            {countdownUnits.map((unit, index) => (
               <div
-                key={i}
-                className="flex flex-col items-center justify-center py-2 sm:py-3 px-2 rounded-2xl bg-white/75 border border-white/90 backdrop-blur-md shadow-[0_6px_24px_rgba(0,0,0,0.06)]"
+                key={unit.label}
+                className={`flex flex-col items-center justify-center px-3 sm:px-5 md:px-7 ${
+                  index !== countdownUnits.length - 1
+                    ? "border-r border-[#50131D]/18"
+                    : ""
+                }`}
               >
-                <span className="font-serif text-xl sm:text-2xl md:text-3xl font-bold text-neutral-900 tabular-nums">
-                  {String(unit.val).padStart(2, "0")}
+                {/* Lighter, Refined Serif Number */}
+                <span className="font-serif text-2xl sm:text-3xl md:text-4xl font-light text-[#50131D] tabular-nums leading-none tracking-normal">
+                  {String(unit.value).padStart(2, "0")}
                 </span>
-                <span className="text-[9px] sm:text-[10px] font-bold tracking-wider text-neutral-500 mt-0.5 uppercase">
+
+                {/* Delicate Tracked-out Label */}
+                <span className="font-sans text-[8px] sm:text-[9px] md:text-[10px] tracking-[0.22em] sm:tracking-[0.26em] font-medium text-[#50131D]/60 uppercase mt-1.5 sm:mt-2">
                   {unit.label}
                 </span>
               </div>
             ))}
-          </motion.div>
+          </div>
+        </motion.div>
+      </main>
 
-          {/* Professional Contact Us Bar */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-            className="mt-6 sm:mt-8 w-full max-w-lg"
+      {/* =========================================================================
+          BOTTOM: SOBER, ELEGANT CONTACT & SOCIAL BAR
+          - Sleek inline row with icons and direct clickable links
+          - Phone, Email, and Instagram separated by thin vertical dividers
+          - Discreet hover opacity drop maintaining luxury quietude
+         ========================================================================= */}
+      <motion.footer
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full flex justify-center pb-2 sm:pb-3 pointer-events-auto"
+      >
+        <nav
+          aria-label="Contact and Social links"
+          className="flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-4 gap-y-1 px-4 py-2 sm:px-6 sm:py-2 rounded-full bg-[#FAF6EE]/75 border border-[#E5D7C3]/80 shadow-[0_4px_20px_rgba(80,19,29,0.03)] backdrop-blur-md text-[#50131D]"
+        >
+          {/* Phone Link */}
+          <a
+            href="tel:+919007496100"
+            className="inline-flex items-center gap-1.5 font-sans text-[11px] sm:text-xs font-normal tracking-wide transition-opacity duration-300 hover:opacity-50"
+            aria-label="Call +91 90074 96100"
           >
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-4 px-5 py-2.5 rounded-2xl sm:rounded-full bg-white/80 border border-white/95 shadow-[0_8px_30px_rgba(0,0,0,0.06)] backdrop-blur-xl">
-              <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.2em] text-neutral-400 uppercase shrink-0">
-                Contact Us
-              </span>
+            <Phone className="w-3.5 h-3.5 stroke-[1.5]" />
+            <span>+91 90074 96100</span>
+          </a>
 
-              <div className="hidden sm:block h-3.5 w-px bg-neutral-300/80" />
+          {/* Thin Hairline Divider */}
+          <span
+            className="h-2.5 sm:h-3 w-px bg-[#50131D]/20"
+            aria-hidden="true"
+          />
 
-              <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs sm:text-sm">
-                <a
-                  href="mailto:info@oneofnonecollective.com"
-                  className="inline-flex items-center gap-1.5 font-medium text-neutral-800 hover:text-neutral-950 transition-colors group"
-                >
-                  <Mail className="w-3.5 h-3.5 text-neutral-500 group-hover:text-neutral-900 transition-colors" />
-                  <span>info@oneofnonecollective.com</span>
-                </a>
+          {/* Email Link */}
+          <a
+            href="mailto:info@oneofnonecollective.com"
+            className="inline-flex items-center gap-1.5 font-sans text-[11px] sm:text-xs font-normal tracking-wide transition-opacity duration-300 hover:opacity-50"
+            aria-label="Email info@oneofnonecollective.com"
+          >
+            <Mail className="w-3.5 h-3.5 stroke-[1.5]" />
+            <span>info@oneofnonecollective.com</span>
+          </a>
 
-                <span className="text-neutral-300">·</span>
+          {/* Thin Hairline Divider */}
+          <span
+            className="h-2.5 sm:h-3 w-px bg-[#50131D]/20"
+            aria-hidden="true"
+          />
 
-                <a
-                  href="https://wa.me/919007406100"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title="Chat on WhatsApp"
-                  className="inline-flex items-center gap-1.5 font-medium text-neutral-800 hover:text-neutral-950 transition-colors group"
-                >
-                  <Phone className="w-3.5 h-3.5 text-neutral-500 group-hover:text-emerald-600 transition-colors" />
-                  <span>9007406100</span>
-                </a>
-              </div>
-            </div>
-          </motion.div>
-
-        </main>
-
-      </div>
-    </>
+          {/* Instagram Link */}
+          <a
+            href="https://www.instagram.com/oneofnonecollective?utm_source=qr&rpxt=MWRjanZlc3F2cGp2Mw=="
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 font-sans text-[11px] sm:text-xs font-normal tracking-wide transition-opacity duration-300 hover:opacity-50"
+            aria-label="Instagram @oneofnonecollective"
+          >
+            <Instagram className="w-3.5 h-3.5 stroke-[1.5]" />
+            <span>@oneofnonecollective</span>
+          </a>
+        </nav>
+      </motion.footer>
+    </div>
   );
 }
 
