@@ -1,39 +1,19 @@
 import { motion } from "framer-motion";
 import { Mail, Phone, Instagram } from "lucide-react";
 import logoWordmark from "@/assets/logo-wordmark.png";
-import texturedBg from "@/assets/luxury-textured-beige-bg.jpg";
 
 export function ComingSoonOverlay() {
   return (
     <div
       id="coming-soon-landing"
       aria-label="One of None"
-      className="fixed inset-0 z-50 min-h-screen w-full flex items-center justify-center px-4 select-none overflow-hidden text-[#50131D]"
+      className="fixed inset-0 z-50 min-h-screen w-full flex items-center justify-center px-4 select-none overflow-hidden text-[#50131D] bg-[#FDF3B6]"
     >
-      {/* =========================================================================
-          BACKGROUND LAYER: LUXURY TEXTURED WARM BEIGE PLASTER
-          - Subtle tactile lime wash / artisanal Venetian stucco texture
-          - Completely free of shadows, foliage, or fronds
-          - Warm alabaster/parchment tone (#FAF5EC to #ECE3D2)
-         ========================================================================= */}
+      {/* Background layer: #FDF3B6 */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
-      >
-        {/* Textured Plaster Wallpaper */}
-        <div
-          className="absolute inset-0 bg-[#F5EFE6] bg-cover bg-center transition-opacity duration-1000"
-          style={{
-            backgroundImage: `url(${texturedBg})`,
-          }}
-        />
-
-        {/* Soft warmth gradient overlay for subtle vignette and depth */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#ECE3D2]/30 pointer-events-none" />
-
-        {/* Soft, gentle ambient illumination in center */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[650px] bg-[radial-gradient(circle_at_center,rgba(255,254,250,0.35),transparent_70%)] blur-2xl pointer-events-none" />
-      </div>
+        className="pointer-events-none absolute inset-0 -z-10 bg-[#FDF3B6]"
+      />
 
       {/* =========================================================================
           CENTERPIECE: BRAND LOGO + THREE ICONS DIRECTLY BELOW
@@ -112,12 +92,13 @@ export function ComingSoonOverlay() {
               }}
             />
 
-            {/* Shape 3: Rounded Hexagon (Blank to Filled Animation) - NO CONNECTIONS */}
-            <motion.polygon
-              points="284,10 324,10 351,57 324,104 284,104 257,57"
+            {/* Shape 3: Authentic Organic Rounded Hexagon (Blank to Filled Animation) */}
+            <motion.path
+              d="M 349.3 57 L 347.4 64.6 L 343.9 71.5 L 340.7 78.2 L 337.3 84.9 L 333.6 92.3 L 328.2 98.9 L 320.8 103.1 L 312.4 104.6 L 304 104.7 L 295.6 104.6 L 287.2 103.1 L 279.8 98.9 L 274.4 92.3 L 270.7 84.9 L 267.3 78.2 L 263.6 71.7 L 260.6 64.6 L 259.6 57 L 260.6 49.4 L 263.6 42.3 L 267.3 35.8 L 270.7 29.1 L 274.4 21.7 L 279.8 15.1 L 287.2 10.9 L 295.6 9.4 L 304 9.3 L 312.4 9.4 L 320.8 10.9 L 328.2 15.1 L 333.6 21.7 L 337.3 29.1 L 340.7 35.8 L 343.9 42.5 L 347.4 49.4 Z"
               stroke="#50131D"
               strokeWidth="15"
               strokeLinejoin="round"
+              strokeLinecap="round"
               initial={{ fill: "rgba(80, 19, 29, 0)" }}
               animate={{
                 fill: [
