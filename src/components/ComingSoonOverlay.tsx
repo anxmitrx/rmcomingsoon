@@ -142,27 +142,27 @@ export function ComingSoonOverlay() {
           draggable={false}
         />
 
-        {/* Three Icons Placed Just Below The Logo */}
+        {/* Three Burgundy Icons Placed Directly on the Background (No Container Background) */}
         <motion.nav
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
           aria-label="Contact and Social links"
-          className="mt-8 sm:mt-10 md:mt-12 flex items-center justify-center gap-x-3 sm:gap-x-4 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full bg-[#FAF6EE]/80 border border-[#E5D7C3]/80 shadow-[0_4px_20px_rgba(80,19,29,0.03)] backdrop-blur-md text-[#50131D]"
+          className="mt-7 sm:mt-9 md:mt-11 flex items-center justify-center gap-x-4 sm:gap-x-5 text-[#50131D]"
         >
           {/* Phone Icon Link */}
           <a
             href="tel:+919007496100"
             title="+91 90074 96100"
-            className="p-1 sm:p-1.5 transition-all duration-300 hover:opacity-50 hover:scale-110 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#50131D]/40 rounded-full"
+            className="p-1.5 transition-all duration-300 hover:opacity-50 hover:scale-110 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#50131D]/40 text-[#50131D]"
             aria-label="Call +91 90074 96100"
           >
-            <Phone className="w-4 h-4 stroke-[1.5]" />
+            <Phone className="w-4 h-4 sm:w-[18px] sm:h-[18px] stroke-[1.6]" />
           </a>
 
-          {/* Thin Hairline Divider */}
+          {/* Thin Hairline Burgundy Divider */}
           <span
-            className="h-3 sm:h-3.5 w-px bg-[#50131D]/20"
+            className="h-3.5 sm:h-4 w-px bg-[#50131D]/25"
             aria-hidden="true"
           />
 
@@ -170,15 +170,15 @@ export function ComingSoonOverlay() {
           <a
             href="mailto:info@oneofnonecollective.com"
             title="info@oneofnonecollective.com"
-            className="p-1 sm:p-1.5 transition-all duration-300 hover:opacity-50 hover:scale-110 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#50131D]/40 rounded-full"
+            className="p-1.5 transition-all duration-300 hover:opacity-50 hover:scale-110 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#50131D]/40 text-[#50131D]"
             aria-label="Email info@oneofnonecollective.com"
           >
-            <Mail className="w-4 h-4 stroke-[1.5]" />
+            <Mail className="w-4 h-4 sm:w-[18px] sm:h-[18px] stroke-[1.6]" />
           </a>
 
-          {/* Thin Hairline Divider */}
+          {/* Thin Hairline Burgundy Divider */}
           <span
-            className="h-3 sm:h-3.5 w-px bg-[#50131D]/20"
+            className="h-3.5 sm:h-4 w-px bg-[#50131D]/25"
             aria-hidden="true"
           />
 
@@ -188,10 +188,10 @@ export function ComingSoonOverlay() {
             target="_blank"
             rel="noopener noreferrer"
             title="@oneofnonecollective"
-            className="p-1 sm:p-1.5 transition-all duration-300 hover:opacity-50 hover:scale-110 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#50131D]/40 rounded-full"
+            className="p-1.5 transition-all duration-300 hover:opacity-50 hover:scale-110 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#50131D]/40 text-[#50131D]"
             aria-label="Instagram @oneofnonecollective"
           >
-            <Instagram className="w-4 h-4 stroke-[1.5]" />
+            <Instagram className="w-4 h-4 sm:w-[18px] sm:h-[18px] stroke-[1.6]" />
           </a>
         </motion.nav>
       </motion.main>
